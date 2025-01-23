@@ -21,9 +21,13 @@ $config = [
             'targets' => [
                 [
                     'class' => 'yii\log\FileTarget',
-                    'levels' => ['error', 'warning'],
+                    'levels' => ['info', 'error', 'warning'],
+                    'categories' => ['websocket'],
+                    'logFile' => '@runtime/logs/websocket.log',
+                    'exportInterval' => 1,
                 ],
             ],
+            'flushInterval' => 1,
         ],
         'db' => $db,
     ],
