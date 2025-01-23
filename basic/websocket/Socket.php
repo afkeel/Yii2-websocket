@@ -6,6 +6,7 @@ use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
 use yii\helpers\Json;
 use app\models\Session;
+use app\models\Token;
 use SplObjectStorage;
 use Exception;
 use Yii;
@@ -21,7 +22,11 @@ class Socket implements MessageComponentInterface {
         $query = $conn->httpRequest->getUri()->getQuery();
         parse_str($query, $queryParams);
 
-        if (!isset($queryParams['token']) || !in_array($queryParams['token'], $this->allowedTokens)) {
+        $token = Token::find()
+                ->where(['IS', 'delete_at', null])
+                ->one();
+        
+        if (!isset($queryParams['token']) || $queryParams['token'] !== $token->key) {
             $conn->close();
             return;
         }
